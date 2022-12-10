@@ -289,8 +289,9 @@ export function getFirstPlayerToken(): Token | null {
 	if (!token) {
 		if (!controlled.length || controlled.length == 0) {
 			// If no token is selected use the token of the users character
-			token = <Token>//@ts-ignore
-			canvas.tokens?.placeables.find((token) => token.document._id === game.user?.character?.document?._id);
+			token = <
+				Token //@ts-ignore
+			>canvas.tokens?.placeables.find((token) => token.document._id === game.user?.character?.document?._id);
 		}
 		// If no token is selected use the first owned token of the users character you found
 		if (!token) {

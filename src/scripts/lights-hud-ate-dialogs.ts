@@ -727,10 +727,8 @@ export function confirmDialogDropTheTorch(lightDataDialog: LightDataDialog): Dia
 					let tokenDataDropTheTorch: TokenData | null = null;
 					// const tokenId = <string>randomID();
 					try {
-						const tokenDataDropTheTorchTmp = <TokenDocument>(
-							//@ts-ignore
-							await prepareTokenDataDropTheTorch(item, _token?.document?.elevation ?? 0)
-						);
+						const tokenDataDropTheTorchTmp = <TokenDocument>//@ts-ignore
+						await prepareTokenDataDropTheTorch(item, _token?.document?.elevation ?? 0);
 						// actorDropTheTorch = <Actor>game.actors?.get(<string>tokenDataDropTheTorchTmp.actorId);
 						tokenDataDropTheTorch = await actor.getTokenData(tokenDataDropTheTorchTmp);
 						// actorDropTheTorch = <Actor>await prepareTokenDataDropTheTorch(item, tokenId, _token?.document?.elevation ?? 0);
@@ -1037,7 +1035,7 @@ async function applyFlagsOnTokenLightsStatic(tokenId: string, itemId: string, is
 	const width = tokenData.width;
 	const scale = tokenData.scale;
 
-	const brightSight: number= tokenData.brightSight;
+	const brightSight: number = tokenData.brightSight;
 	const dimSight: number = tokenData.dimSight;
 	const sightAngle: number = tokenData.sightAngle;
 
