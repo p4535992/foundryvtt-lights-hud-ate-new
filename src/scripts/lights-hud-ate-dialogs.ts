@@ -138,21 +138,29 @@ export function presetDialog(applyChanges: boolean): Dialog {
 					const width = null;
 					const scale = null;
 					const isPreset = true;
-					const hasVision = visionType != null 
-						&& visionType != undefined 
-						&& visionType != VisionHUDPreset.NONE
-						&& visionType != VisionHUDPreset.NO_CHANGE;
+					const hasVision =
+						visionType != null &&
+						visionType != undefined &&
+						visionType != VisionHUDPreset.NONE &&
+						visionType != VisionHUDPreset.NO_CHANGE;
 
-					const hasLight = lightSource != null 
-						&& lightSource != undefined 
-						&& lightSource != LightHUDPreset.NONE
-						&& lightSource != LightHUDPreset.NO_CHANGE;
+					const hasLight =
+						lightSource != null &&
+						lightSource != undefined &&
+						lightSource != LightHUDPreset.NONE &&
+						lightSource != LightHUDPreset.NO_CHANGE;
 
-					const effectNameForVisionOrLight = hasVision ? visionIndex.name : 
-						hasLight ? lightIndex.name : "Unknown Vision";
-					const effectIconForVisionOrLight = hasVision ? visionIndex.img : 
-						//@ts-ignore
-						hasLight ? lightIndex.img : tokenIcon;
+					const effectNameForVisionOrLight = hasVision
+						? visionIndex.name
+						: hasLight
+						? lightIndex.name
+						: "Unknown Vision";
+					const effectIconForVisionOrLight = hasVision
+						? visionIndex.img
+						: //@ts-ignore
+						hasLight
+						? lightIndex.img
+						: tokenIcon;
 					// Update Token
 					await updateTokenLighting(
 						token,
@@ -857,9 +865,9 @@ export async function manageActiveEffectATL(tokenId, itemId, effectId, isApplied
 	}
 	// TODO MADE A BETTER CODE THAN THIS
 	if (!itemId && game.settings.get(CONSTANTS.MODULE_NAME, "showATEFromNoItemOrigin")) {
-		const actorEffects = <EmbeddedCollection<typeof ActiveEffect, ActorData>>token.actor?.effects;
+		//const actorEffects = <EmbeddedCollection<typeof ActiveEffect, ActorData>>token.actor?.effects;
 		//@ts-ignore
-		const effect = <ActiveEffect>actorEffects.find((activeEffect) => <string>activeEffect?._id == effectId);
+		//const effect = <ActiveEffect>actorEffects.find((activeEffect) => <string>activeEffect?._id == effectId);
 		if (isApplied) {
 			await aemlApiLigthsHudAte.onManageActiveEffectFromEffectId(
 				//@ts-ignore
@@ -900,9 +908,9 @@ export async function manageActiveEffectATL(tokenId, itemId, effectId, isApplied
 			}
 		}
 	} finally {
-		const actorEffects = <EmbeddedCollection<typeof ActiveEffect, ActorData>>token.actor?.effects;
+		//const actorEffects = <EmbeddedCollection<typeof ActiveEffect, ActorData>>token.actor?.effects;
 		//@ts-ignore
-		const effect = <ActiveEffect>actorEffects.find((activeEffect) => <string>activeEffect?._id == effectId);
+		//const effect = <ActiveEffect>actorEffects.find((activeEffect) => <string>activeEffect?._id == effectId);
 		if (isApplied) {
 			await aemlApiLigthsHudAte.onManageActiveEffectFromEffectId(
 				//@ts-ignore

@@ -393,8 +393,8 @@ export async function updateTokenLighting(
 	lightAnimationReverse: boolean | null,
 
 	applyAsAtlEffect = false,
-	effectName: string | null = null,
-	effectIcon: string | null = null,
+	effectName: string | null = "LightHUD+ATE Effect",
+	effectIcon: string | null = "modules/lights-hud-ate/assets/lightbulb-solid.svg",
 	duration: number | null = null,
 
 	vision = false,
@@ -840,7 +840,7 @@ export async function retrieveItemLightsStatic(token: Token): Promise<LightDataH
 	// Convert item to LightHudData
 	imagesParsed = await Promise.all(
 		lightItems.map(async (lightHUDElement: LightHUDElement) => {
-			const im = <string>lightHUDElement.img;
+			const im = <string>lightHUDElement.img || "modules/lights-hud-ate/assets/lightbulb-solid.svg";
 			const split = im.split("/");
 			const extensions = im.split(".");
 			const extension = <string>extensions[extensions.length - 1];
@@ -985,7 +985,7 @@ export async function retrieveItemLights(token: Token): Promise<LightDataHud[]> 
 	// Convert item to LightHudData
 	imagesParsed = await Promise.all(
 		lightItems.map(async (item: Item) => {
-			const im = <string>item.img;
+			const im = <string>item.img || "modules/lights-hud-ate/assets/lightbulb-solid.svg";
 			const split = im.split("/");
 			const extensions = im.split(".");
 			const extension = <string>extensions[extensions.length - 1];
@@ -1035,7 +1035,10 @@ export async function retrieveItemLights(token: Token): Promise<LightDataHud[]> 
 					activeEffectDataToUpdate.disabled = true;
 					activeEffectDataToUpdate.origin =
 						aeAtl0.parent instanceof Item ? `Item.${aeAtl0.parent}` : `Actor.${aeAtl0.parent}`;
-					await aemlApiLigthsHudAte.addActiveEffectOnToken(<string>token.document.id, <any>activeEffectDataToUpdate);
+					await aemlApiLigthsHudAte.addActiveEffectOnToken(
+						<string>token.document.id,
+						<any>activeEffectDataToUpdate
+					);
 					//@ts-ignore
 					effectFromActor = <any>token.document.actor?.effects.find((ae: ActiveEffect) => {
 						//@ts-ignore
@@ -1050,7 +1053,11 @@ export async function retrieveItemLights(token: Token): Promise<LightDataHud[]> 
 				effectnameTmp = <string>effectFromActor.name ?? effectFromActor.label;
 				_idTmp = <string>effectFromActor._id;
 
-				const applied = await aemlApiLigthsHudAte.hasEffectAppliedOnToken(<string>token.document.id, nameToSearch, true);
+				const applied = await aemlApiLigthsHudAte.hasEffectAppliedOnToken(
+					<string>token.document.id,
+					nameToSearch,
+					true
+				);
 				// If the active effect is disabled or is supressed
 				disabledTmp = effectFromActor.disabled || false;
 				//@ts-ignore
@@ -1165,8 +1172,15 @@ export async function retrieveItemLights(token: Token): Promise<LightDataHud[]> 
 
 	if (actorAtlEffects.length > 0) {
 		for (const aeAtl0 of <any[]>actorAtlEffects) {
+			let effectFromActorToIgnore = imagesParsed.find((ldu: LightDataHud) => {
+				//@ts-ignore
+				return isStringEquals(ldu._id, aeAtl0._id);
+			});
+			if (effectFromActorToIgnore) {
+				continue;
+			}
 			//@ts-ignore
-			const im = <string>aeAtl0.icon || token.img || "";
+			const im = <string>aeAtl0.icon || token.img || "modules/lights-hud-ate/assets/lightbulb-solid.svg";
 			const split = im.split("/");
 			const extensions = im.split(".");
 			const extension = <string>extensions[extensions.length - 1];
@@ -1207,7 +1221,10 @@ export async function retrieveItemLights(token: Token): Promise<LightDataHud[]> 
 				activeEffectDataToUpdate.disabled = true;
 				activeEffectDataToUpdate.origin =
 					aeAtl0.parent instanceof Item ? `Item.${aeAtl0.parent}` : `Actor.${aeAtl0.parent}`;
-				await aemlApiLigthsHudAte.addActiveEffectOnToken(<string>token.document.id, <any>activeEffectDataToUpdate);
+				await aemlApiLigthsHudAte.addActiveEffectOnToken(
+					<string>token.document.id,
+					<any>activeEffectDataToUpdate
+				);
 				// ???
 				effectFromActor = <ActiveEffect>token.document.actor?.effects.find((ae: ActiveEffect) => {
 					//@ts-ignore
@@ -1225,7 +1242,11 @@ export async function retrieveItemLights(token: Token): Promise<LightDataHud[]> 
 			//@ts-ignore
 			_idTmp = <string>effectFromActor._id;
 
-			const applied = await aemlApiLigthsHudAte.hasEffectAppliedOnToken(<string>token.document.id, nameToSearch, true);
+			const applied = await aemlApiLigthsHudAte.hasEffectAppliedOnToken(
+				<string>token.document.id,
+				nameToSearch,
+				true
+			);
 			// If the active effect is disabled or is supressed
 			//@ts-ignore
 			disabledTmp = effectFromActor.disabled || false;
@@ -1365,7 +1386,7 @@ export async function retrieveItemLightsWithFlagLightsStatic(token: Token): Prom
 	// Convert item to LightHudData
 	imagesParsed = await Promise.all(
 		lightItems.map(async (lightHUDElement: LightHUDElement) => {
-			const im = <string>lightHUDElement.img;
+			const im = <string>lightHUDElement.img || "modules/lights-hud-ate/assets/lightbulb-solid.svg";
 			const split = im.split("/");
 			const extensions = im.split(".");
 			const extension = <string>extensions[extensions.length - 1];
@@ -1478,7 +1499,7 @@ export async function retrieveItemLightsWithFlag(token: Token): Promise<LightDat
 	// Convert item to LightHudData
 	imagesParsed = await Promise.all(
 		lightItems.map(async (item: Item) => {
-			const im = <string>item.img;
+			const im = <string>item.img || "modules/lights-hud-ate/assets/lightbulb-solid.svg";
 			const split = im.split("/");
 			const extensions = im.split(".");
 			const extension = <string>extensions[extensions.length - 1];
