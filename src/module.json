@@ -62,7 +62,7 @@
 	"systems": [],
 	"scripts": [],
 	"esmodules": ["main.js"],
-	"styles": ["styles/final-blow.css"],
+	"styles": ["styles/dd.css", "lights-hud-ate.css"],
 	"compatibility": {
 		"minimum": 10,
 		"verified": 10,
