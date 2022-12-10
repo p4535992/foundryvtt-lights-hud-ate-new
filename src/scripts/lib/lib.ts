@@ -8,7 +8,7 @@ import CONSTANTS from "../constants";
 import { getATLEffectsFromItem } from "../lights-hud-ate-config";
 import { LightHUDAteEffectDefinitions } from "../lights-hud-ate-effect-definition";
 import { LightDataHud, LightHUDElement, LightHUDNoteFlags, LightHUDPreset } from "../lights-hud-ate-models";
-import { aemlApi } from "../module";
+import { aemlApiLigthsHudAte } from "../module";
 
 // =============================
 // Module Generic function
@@ -348,7 +348,7 @@ export function firstGM() {
 }
 
 /**
- * TODO if i need to manage the roll for specific system usually is enough item.roll()
+ * TODO if i need to manage the roll for specific system usually is enough item.use()
  * @href https://github.com/itamarcu/roll-from-compendium/blob/master/scripts/roll-from-compendium.js
  */
 export async function rollDependingOnSystem(item: Item) {
@@ -364,7 +364,7 @@ export async function rollDependingOnSystem(item: Item) {
 	//   return dnd5eRollItem(item, actor, actorHasItem)
 	// }
 	//@ts-ignore
-	return item.roll();
+	return item.use();
 }
 
 // Update the relevant light parameters of a token
@@ -407,7 +407,7 @@ export async function updateTokenLighting(
 	isPreset: boolean
 ) {
 	if (applyAsAtlEffect) {
-		const efffectAtlToApply = await aemlApi.convertToATLEffect(
+		const efffectAtlToApply = await aemlApiLigthsHudAte.convertToATLEffect(
 			//lockRotation,
 			dimSight,
 			brightSight,
@@ -443,7 +443,7 @@ export async function updateTokenLighting(
 			scale
 		);
 		(efffectAtlToApply.customId = <string>token.actor?.id),
-			await aemlApi.addEffectOnToken(<string>token.id, <string>effectName, efffectAtlToApply);
+			await aemlApiLigthsHudAte.addEffectOnToken(<string>token.id, <string>effectName, efffectAtlToApply);
 	} else {
 		const tokenData = <any>token.document;
 		// TODO FIND A BETTER WAY FOR THIS
@@ -697,7 +697,7 @@ export async function dropTheToken(item: Item, data: { x; y }, type = "character
 			//@ts-ignore
 			ae.disabled = false;
 			//@ts-ignore
-			await aemlApi.addActiveEffectOnToken(<string>actor.token?.id, ae);
+			await aemlApiLigthsHudAte.addActiveEffectOnToken(<string>actor.token?.id, ae);
 		})
 	);
 
@@ -1035,7 +1035,7 @@ export async function retrieveItemLights(token: Token): Promise<LightDataHud[]> 
 					activeEffectDataToUpdate.disabled = true;
 					activeEffectDataToUpdate.origin =
 						aeAtl0.parent instanceof Item ? `Item.${aeAtl0.parent}` : `Actor.${aeAtl0.parent}`;
-					await aemlApi.addActiveEffectOnToken(<string>token.document.id, <any>activeEffectDataToUpdate);
+					await aemlApiLigthsHudAte.addActiveEffectOnToken(<string>token.document.id, <any>activeEffectDataToUpdate);
 					//@ts-ignore
 					effectFromActor = <any>token.document.actor?.effects.find((ae: ActiveEffect) => {
 						//@ts-ignore
@@ -1050,11 +1050,11 @@ export async function retrieveItemLights(token: Token): Promise<LightDataHud[]> 
 				effectnameTmp = <string>effectFromActor.name ?? effectFromActor.label;
 				_idTmp = <string>effectFromActor._id;
 
-				const applied = await aemlApi.hasEffectAppliedOnToken(<string>token.document.id, nameToSearch, true);
+				const applied = await aemlApiLigthsHudAte.hasEffectAppliedOnToken(<string>token.document.id, nameToSearch, true);
 				// If the active effect is disabled or is supressed
 				disabledTmp = effectFromActor.disabled || false;
 				//@ts-ignore
-				suppressedTmp = effectFromActor.document.isSuppressed || false;
+				suppressedTmp = effectFromActor.isSuppressed || false;
 				temporaryTmp = aeAtl0.isTemporary || false;
 				passiveTmp = !temporaryTmp;
 				if (applied && !disabledTmp && !suppressedTmp) {
@@ -1207,7 +1207,7 @@ export async function retrieveItemLights(token: Token): Promise<LightDataHud[]> 
 				activeEffectDataToUpdate.disabled = true;
 				activeEffectDataToUpdate.origin =
 					aeAtl0.parent instanceof Item ? `Item.${aeAtl0.parent}` : `Actor.${aeAtl0.parent}`;
-				await aemlApi.addActiveEffectOnToken(<string>token.document.id, <any>activeEffectDataToUpdate);
+				await aemlApiLigthsHudAte.addActiveEffectOnToken(<string>token.document.id, <any>activeEffectDataToUpdate);
 				// ???
 				effectFromActor = <ActiveEffect>token.document.actor?.effects.find((ae: ActiveEffect) => {
 					//@ts-ignore
@@ -1225,12 +1225,12 @@ export async function retrieveItemLights(token: Token): Promise<LightDataHud[]> 
 			//@ts-ignore
 			_idTmp = <string>effectFromActor._id;
 
-			const applied = await aemlApi.hasEffectAppliedOnToken(<string>token.document.id, nameToSearch, true);
+			const applied = await aemlApiLigthsHudAte.hasEffectAppliedOnToken(<string>token.document.id, nameToSearch, true);
 			// If the active effect is disabled or is supressed
 			//@ts-ignore
 			disabledTmp = effectFromActor.disabled || false;
 			//@ts-ignore
-			suppressedTmp = effectFromActor.document.isSuppressed || false;
+			suppressedTmp = effectFromActor.isSuppressed || false;
 			temporaryTmp = aeAtl0.isTemporary || false;
 			passiveTmp = !temporaryTmp;
 			if (applied && !disabledTmp && !suppressedTmp) {
