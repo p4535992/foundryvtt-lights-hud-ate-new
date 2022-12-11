@@ -1045,6 +1045,17 @@ export async function retrieveItemLights(token: Token): Promise<LightDataHud[]> 
 						return isStringEquals(nameToSearch, ae.label);
 					});
 				}
+				// TRY TO GET FROM ITEM
+				if (!effectFromActor) {
+					const atlEffects = item.effects.filter((entity) => {
+						//@ts-ignore
+						return entity.changes.find((effect) => effect.key.includes("ATL")) != undefined;
+					});
+					// FOR MY OWN SANITY ONLY THE FIRST
+					if (atlEffects.length > 0) {
+						effectFromActor = atlEffects[0];
+					}
+				}
 				if (!effectFromActor) {
 					warn(`No active effect found on token ${token.document.name} with name ${nameToSearch}`);
 					return new LightDataHud();

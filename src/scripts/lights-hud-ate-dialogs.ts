@@ -9,6 +9,7 @@ import {
 	checkNumberFromString,
 	i18n,
 	i18nFormat,
+	isStringEquals,
 	prepareTokenDataDropTheTorch,
 	retrieveItemLightsWithFlag,
 	retrieveItemLightsWithFlagAndDisableThem,
@@ -19,6 +20,7 @@ import {
 	updateTokenLightingFromData,
 	warn,
 } from "./lib/lib";
+import { getATLEffectsFromItem } from "./lights-hud-ate-config";
 import {
 	EffectActions,
 	LightDataDialog,
@@ -684,6 +686,7 @@ export function confirmDialogATLEffectItem(lightDataDialog: LightDataDialog): Di
 							// lightDataDialog.actorId,
 							lightDataDialog.itemId,
 							lightDataDialog.effectId,
+							lightDataDialog.effectName,
 							lightDataDialog.isApplied
 						);
 					} else if (lightDataDialog.isflag) {
@@ -845,7 +848,7 @@ export function confirmDialogDropTheTorch(lightDataDialog: LightDataDialog): Dia
 	});
 }
 
-export async function manageActiveEffectATL(tokenId, itemId, effectId, isApplied) {
+export async function manageActiveEffectATL(tokenId, itemId, effectId, effectName, isApplied) {
 	//const actor = <Actor>game.actors?.get(actorId);
 	// if (actor.getActiveTokens().length <= 0) {
 	//   warn(`No token found for the actor with id '${actorId}'`);
@@ -864,37 +867,37 @@ export async function manageActiveEffectATL(tokenId, itemId, effectId, isApplied
 		return;
 	}
 	// TODO MADE A BETTER CODE THAN THIS
-	if (!itemId && game.settings.get(CONSTANTS.MODULE_NAME, "showATEFromNoItemOrigin")) {
-		//const actorEffects = <EmbeddedCollection<typeof ActiveEffect, ActorData>>token.actor?.effects;
-		//@ts-ignore
-		//const effect = <ActiveEffect>actorEffects.find((activeEffect) => <string>activeEffect?._id == effectId);
-		if (isApplied) {
-			await aemlApiLigthsHudAte.onManageActiveEffectFromEffectId(
-				//@ts-ignore
-				EffectActions.toogle,
-				token.actor,
-				effectId,
-				false,
-				false,
-				true
-			);
-		} else {
-			await aemlApiLigthsHudAte.onManageActiveEffectFromEffectId(
-				//@ts-ignore
-				EffectActions.toogle,
-				token.actor,
-				effectId,
-				false,
-				true,
-				false
-			);
-		}
+	if (!itemId && !game.settings.get(CONSTANTS.MODULE_NAME, "showATEFromNoItemOrigin")) {
+		// //const actorEffects = <EmbeddedCollection<typeof ActiveEffect, ActorData>>token.actor?.effects;
+		// //@ts-ignore
+		// //const effect = <ActiveEffect>actorEffects.find((activeEffect) => <string>activeEffect?._id == effectId);
+		// if (isApplied) {
+		// 	await aemlApiLigthsHudAte.onManageActiveEffectFromEffectId(
+		// 		//@ts-ignore
+		// 		EffectActions.toogle,
+		// 		token.actor,
+		// 		effectId,
+		// 		false,
+		// 		false,
+		// 		true
+		// 	);
+		// } else {
+		// 	await aemlApiLigthsHudAte.onManageActiveEffectFromEffectId(
+		// 		//@ts-ignore
+		// 		EffectActions.toogle,
+		// 		token.actor,
+		// 		effectId,
+		// 		false,
+		// 		true,
+		// 		false
+		// 	);
+		// }
 		return;
 	}
 	const item = <Item>token.actor?.items.find((entity: Item) => {
 		return <string>entity.id == itemId;
 	});
-	if (!item) {
+	if (!item && !game.settings.get(CONSTANTS.MODULE_NAME, "showATEFromNoItemOrigin")) {
 		warn(`No valid item found for the token with id '${tokenId}'`, true);
 		return;
 	}
@@ -908,9 +911,6 @@ export async function manageActiveEffectATL(tokenId, itemId, effectId, isApplied
 			}
 		}
 	} finally {
-		//const actorEffects = <EmbeddedCollection<typeof ActiveEffect, ActorData>>token.actor?.effects;
-		//@ts-ignore
-		//const effect = <ActiveEffect>actorEffects.find((activeEffect) => <string>activeEffect?._id == effectId);
 		if (isApplied) {
 			await aemlApiLigthsHudAte.onManageActiveEffectFromEffectId(
 				//@ts-ignore
@@ -922,15 +922,38 @@ export async function manageActiveEffectATL(tokenId, itemId, effectId, isApplied
 				true
 			);
 		} else {
-			await aemlApiLigthsHudAte.onManageActiveEffectFromEffectId(
-				//@ts-ignore
-				EffectActions.toogle,
-				token.actor,
-				effectId,
-				false,
-				true,
-				false
-			);
+			const actorEffects = <EmbeddedCollection<typeof ActiveEffect, ActorData>>token.actor?.effects;
+			//@ts-ignore
+			const effect = <ActiveEffect>actorEffects.find((activeEffect:ActiveEffect) => isStringEquals(<string>activeEffect?.label == effectName));
+			if(!effect && itemId){
+				const aeAtl = <ActiveEffect[]>getATLEffectsFromItem(item) || [];
+				let aeAtl0:any|undefined = undefined;
+				if(aeAtl && aeAtl.length > 0){
+					aeAtl0 = aeAtl[0];
+				} else {
+					warn(`No valid effect is found on item found for the token with id '${tokenId}'`, true);
+					return;
+				}
+				const activeEffectDataToUpdate = aeAtl0.toObject();
+				activeEffectDataToUpdate.transfer = true;
+				activeEffectDataToUpdate.disabled = false;
+				activeEffectDataToUpdate.origin =
+					aeAtl0.parent instanceof Item ? `Item.${aeAtl0.parent}` : `Actor.${aeAtl0.parent}`;
+				await aemlApiLigthsHudAte.addActiveEffectOnToken(
+					<string>token.document.id,
+					<any>activeEffectDataToUpdate
+				);
+			} else {
+				await aemlApiLigthsHudAte.onManageActiveEffectFromEffectId(
+					//@ts-ignore
+					EffectActions.toogle,
+					token.actor,
+					effectId,
+					false,
+					true,
+					false
+				);
+			}
 		}
 	}
 }

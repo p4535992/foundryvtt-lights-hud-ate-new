@@ -166,6 +166,7 @@ export async function addLightsHUDButtons(app, html: JQuery<HTMLElement>, tokenD
 							// lightDataDialog.actorId,
 							lightDataDialog.itemId,
 							lightDataDialog.effectId,
+							lightDataDialog.effectName,
 							lightDataDialog.isApplied
 						);
 					} else if (lightDataDialog.isflag) {
