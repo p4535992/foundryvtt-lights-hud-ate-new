@@ -141,6 +141,8 @@ I add two dialog panel one for put the preset one from the current supported sys
 
 ### Drop the light (work but need feed back from the community for better user experience)
 
+#### **THIS FEATURE NEED FOR NOW TO IVE TO PLAYERS THE ACTOR CREATION PERMISSION, I KNOW IS NOT "GOOD" BUT I'M NOT VRY GOOD AT THIS, YOU CAN USE THIS MODULE TO HIDE THIS STUFF A LITTLE [Hidden Entity Link](https://github.com/p4535992/foundryvtt-hidden-entity-links)**
+
 This feature is inspired from [Drop My Torch](https://gitlab.com/derekstucki/drop-my-torch), but completely rewrite and the actor/token is created on runtime. 
 
 If you right click on a image/voice of the hud panel we call the [warpgate](https://github.com/trioderegion/warpgate) function `spawnAt` for let the player drop a light on the canvas.
