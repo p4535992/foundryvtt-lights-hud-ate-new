@@ -516,7 +516,7 @@ export async function updateTokenLighting(
 			width = tokenData.width;
 		}
 		if (scale == null || scale == undefined) {
-			scale = tokenData.scale;
+			scale = tokenData.texture.scaleX;
 		}
 
 		token.document.update({
@@ -553,13 +553,14 @@ export async function updateTokenLighting(
 	}
 }
 
-export async function updateTokenLightingFromData(token: Token, tokenData: TokenData, isPreset: boolean) {
+export async function updateTokenLightingFromData(token: Token, tokenData: any, isPreset: boolean) {
 	await token.document.update({
 		// lockRotation: lockRotation,
 		vision: tokenData.vision,
 		height: tokenData.height,
 		width: tokenData.width,
-		scale: tokenData.scale,
+		//@ts-ignore
+		scale: tokenData.texture.scaleX,
 		light: {
 			dim: manageDist(tokenData.light.dim, isPreset),
 			bright: manageDist(tokenData.light.bright, isPreset),
@@ -683,7 +684,7 @@ export async function dropTheToken(item: Item, data: { x; y }, type = "character
 
 	// Merge Token data with the default for the Actor
 	//@ts-ignore
-	const tokenData2: TokenData = foundry.utils.mergeObject(actorData.token, tokenData, { inplace: true });
+	const tokenData2: any = foundry.utils.mergeObject(actorData.token, tokenData, { inplace: true });
 	tokenData2.actorId = <string>actor.id;
 	tokenData2.actorLink = true;
 
@@ -729,9 +730,13 @@ export async function prepareTokenDataDropTheTorch(
 	item: Item,
 	elevation: number,
 	type = "character"
-): Promise<any | undefined> {
+): Promise<Actor|undefined> {
 	if (!type) {
-		error("No type is present");
+		error("No type is present for this option", true);
+		return undefined;
+	}
+	if (!item) {
+		error("No item is present for this option", true);
 		return undefined;
 	}
 	// START CREATION
@@ -745,31 +750,51 @@ export async function prepareTokenDataDropTheTorch(
 		actorName = <string>actorName.split(".")[0];
 	}
 
-	const actorDataEffects: any[] = [];
+	let actorDataEffects: any[] = [];
 	const atlEffects = item.effects.filter((entity) => {
 		//@ts-ignore
 		return entity.changes.find((effect) => effect.key.includes("ATL")) != undefined;
 	});
-	for (const ae of atlEffects) {
-		// Make sure is enabled
-		//@ts-ignore
-		ae.disabled = false;
-		//@ts-ignore
-		ae.transfer = true;
-		//await API.addActiveEffectOnToken(<string>actor.token?.id, ae);
-		actorDataEffects.push(ae);
-	}
+	// for (const ae of atlEffects) {
+	// 	// Make sure is enabled
+	// 	//@ts-ignore
+	// 	ae.disabled = false;
+	// 	//@ts-ignore
+	// 	ae.transfer = true;
+	// 	//await API.addActiveEffectOnToken(<string>actor.token?.id, ae);
+	// 	// Strange bug fix
+	// 	//@ts-ignore
+	// 	delete ae._id
+	// 	actorDataEffects.push(ae);
+	// }
 
-	const actor = <Actor>await Actor.create({
+	// Strange bug with fvtt10
+
+	const tokenEffectsCleaned: any[] = [];
+	for (const effect of atlEffects) {
+		let effectTmp: any | undefined = undefined;
+		try {
+			effectTmp = effect.toObject(false);
+		} catch (e) {
+			effectTmp = effect.toJSON();
+		}
+		//@ts-ignore
+		delete effectTmp._id;
+		tokenEffectsCleaned.push(effectTmp);
+	}
+	actorDataEffects = tokenEffectsCleaned;
+
+	const newActorDropped = <Actor>await Actor.create({
 		name: actorName,
 		type: createdType,
 		img: item.img,
 		effects: actorDataEffects,
 		hidden: false,
 		elevation: elevation,
+		prototypeToken: undefined
 	});
 
-	const atlActorEffects = actor.effects.filter((entity) => {
+	const atlActorEffects = newActorDropped.effects.filter((entity) => {
 		//@ts-ignore
 		return entity.changes.find((effect) => effect.key.includes("ATL")) != undefined;
 	});
@@ -782,7 +807,7 @@ export async function prepareTokenDataDropTheTorch(
 		//@ts-ignore
 		if (!ae.origin) {
 			//@ts-ignore
-			ae.origin = `Actor.${actor.id}`;
+			ae.origin = `Actor.${newActorDropped.id}`;
 		}
 		// await actor.createEmbeddedDocuments('ActiveEffect', [<Record<string, any>>ae]);
 		await ae.update({
@@ -797,27 +822,31 @@ export async function prepareTokenDataDropTheTorch(
 
 	// WTF ???? THIS CONVERT SOME FALSE TO TRUE ????
 	//const actorData = foundry.utils.duplicate(actor);
-	const actorData = actor;
-	await actorData.update({ permission: { default: 3 } });
-
+	// const actorData = newActorDropped;
+	// SET ALL PLAYERS HAS OWNER
+	await newActorDropped.update({ permission: { default: 3 } });
+	/*
 	const tokenData = {
 		hidden: false,
-		img: actor.img,
+		img: newActorDropped.img,
 		elevation: elevation,
-		actorData: actorData,
+		actorData: newActorDropped,
 		// effects: actorDataEffects
 		actorLink: false,
 	};
 
 	// Merge Token data with the default for the Actor
 	//@ts-ignore
-	const tokenData2 = foundry.utils.mergeObject(actorData.token.document, tokenData, { inplace: true });
+	const tokenData2 = foundry.utils.mergeObject(actorData.prototypeToken, tokenData, { inplace: true });
 	// tokenData2.actorId = <string>actor._id;
 	// tokenData2.actorLink = false; // if actorless is false
 	// tokenData2.name = actorName;
 	// tokenData2._id = tokenId;
-
-	return <any>tokenData2;
+	*/
+	//@ts-ignore
+	// const tokenDataDropTheTorch = <any>await newActorDropped.getTokenDocument();
+	// return <any>tokenDataDropTheTorch;
+	return newActorDropped;
 }
 
 export function checkNumberFromString(value) {
