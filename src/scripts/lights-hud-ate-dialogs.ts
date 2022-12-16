@@ -278,13 +278,26 @@ export async function customATLDialog(applyChanges: boolean, preset: any = undef
 	if (shadows === undefined) shadows = "";
 	if (visionMode === undefined) visionMode = "";
 
-	let colorationTypes = ``;
-	for (const [k, v] of Object.entries(AdaptiveLightingShader.COLORATION_TECHNIQUES)) {
+	let colorationTypes = `<option value="">None</option>`;
+	// AdaptiveLightingShader.COLORATION_TECHNIQUES
+	//@ts-ignore
+	for (const [k, v] of <any>Object.entries(AdaptiveLightingShader.SHADER_TECHNIQUES)) {
 		const name = game.i18n.localize(v.label);
 		colorationTypes += `<option value="${v.id}" ${coloration === v.id ? "selected" : ""}>${name}</option>`;
 	}
 
-	let animationTypes = `<option value="none">None</option>`;
+	//@ts-ignore
+	const visionModesToCheck = Object.values(CONFIG.Canvas.visionModes).filter((f) => f.tokenConfig);
+	//@ts-ignore
+	let visionModeTypes = `<option value="">None</option>`;
+	//@ts-ignore
+	for (const v of <any>visionModesToCheck) {
+		const name = game.i18n.localize(v.label);
+		visionModeTypes += `<option value="${v.id}">${name}</option>`;
+	}
+	// ;
+
+	let animationTypes = `<option value="">None</option>`;
 	for (const [k, v] of Object.entries(CONFIG.Canvas.lightAnimations)) {
 		const name = game.i18n.localize(v.label);
 		animationTypes += `<option value="${k.toLocaleLowerCase()}" ${
@@ -347,16 +360,20 @@ export async function customATLDialog(applyChanges: boolean, preset: any = undef
 	const dialogContent = await renderTemplate(
 		`/modules/${CONSTANTS.MODULE_NAME}/templates/light-hud-ate-custom-dialog.hbs`,
 		{
-			light,
-			dimSight,
-			brightSight,
-			sightAngle,
-			name,
 			height,
 			width,
 			scale,
+			alpha,
+
 			id,
+			name,
 			preset,
+			
+			dimSight,
+			brightSight,
+			sightAngle,
+			
+			light,
 			dim,
 			bright,
 			color,
@@ -364,7 +381,6 @@ export async function customATLDialog(applyChanges: boolean, preset: any = undef
 			animationSpeed: animation?.speed,
 			animationReverse: animation?.reverse,
 			animationIntensity: animation?.intensity,
-			alpha,
 			lightAngle,
 			coloration,
 			contrast,
@@ -374,6 +390,10 @@ export async function customATLDialog(applyChanges: boolean, preset: any = undef
 			shadows,
 			visionMode,
 			lightAlpha,
+
+			animationTypes,
+			colorationTypes,
+			visionModeTypes
 		}
 	);
 
@@ -403,16 +423,16 @@ export async function customATLDialog(applyChanges: boolean, preset: any = undef
 				const alpha = <number>checkNumberFromString(html.find("#alpha")[0].value);
 
 				const sightVisionMode = <string>html.find("#visionMode")[0].value;
-				const dimSight = <number>checkNumberFromString(html.find("#dimSight")[0].value);
-				const brightSight = <number>checkNumberFromString(html.find("#brightSight")[0].value);
+				const sightDim = <number>checkNumberFromString(html.find("#dimSight")[0].value);
+				const sightBright = <number>checkNumberFromString(html.find("#brightSight")[0].value);
 				const sightEnabled =
-					(is_real_number(dimSight) && Number(dimSight) > 0) ||
-					(is_real_number(brightSight) && Number(brightSight) > 0);
+					(is_real_number(sightDim) && Number(sightDim) > 0) ||
+					(is_real_number(sightBright) && Number(sightBright) > 0);
 				// const sightEnabled = <boolean>checkBooleanFromString(html.find("#enabled")[0].value);
 				const sightAngle = <number>checkNumberFromString(html.find("#sightAngle")[0].value);
 
-				const dimLight = <number>checkNumberFromString(html.find("#dim")[0].value);
-				const brightLight = <number>checkNumberFromString(html.find("#bright")[0].value);
+				const lightDim = <number>checkNumberFromString(html.find("#dim")[0].value);
+				const lightBright = <number>checkNumberFromString(html.find("#bright")[0].value);
 				const lightColor = <string>html.find("#color")[0].value;
 				const lightAlpha = <number>checkNumberFromString(html.find("#lightAlpha")[0].value);
 				const lightAngle = <number>checkNumberFromString(html.find("#lightAngle")[0].value);
@@ -422,20 +442,20 @@ export async function customATLDialog(applyChanges: boolean, preset: any = undef
 					checkNumberFromString(html.find("#animationIntensity")[0].value)
 				);
 				const lightAnimationReverse = <boolean>html.find("#animationIntensity").is(":checked");
-				const coloration = <number>checkNumberFromString(html.find("#lightColoration")[0].value);
-				const luminosity = <number>checkNumberFromString(html.find("#lightLuminosity")[0].value);
-				const gradual = <boolean>html.find("#lightGradual").is(":checked");
-				const saturation = <number>checkNumberFromString(html.find("#lightSaturation")[0].value);
-				const contrast = <number>checkNumberFromString(html.find("#lightContrast")[0].value);
-				const shadows = <number>checkNumberFromString(html.find("#lightShadows")[0].value);
-				const vision = dimSight > 0 || brightSight > 0 ? true : false;
-
+				const lightColoration = <number>checkNumberFromString(html.find("#lightColoration")[0].value);
+				const lightLuminosity = <number>checkNumberFromString(html.find("#lightLuminosity")[0].value);
+				const lightGradual = <boolean>html.find("#lightGradual").is(":checked");
+				const lightSaturation = <number>checkNumberFromString(html.find("#lightSaturation")[0].value);
+				const lightContrast = <number>checkNumberFromString(html.find("#lightContrast")[0].value);
+				const lightShadows = <number>checkNumberFromString(html.find("#lightShadows")[0].value);
+				
+				const vision = sightDim > 0 || sightBright > 0 ? true : false;
 				const isPreset = false;
-
 				const applyAsAtlAteEffect = <boolean>html.find("#apply-as-atl-ate").is(":checked") ?? false;
 				const duration = <number>checkNumberFromString(html.find("#duration")[0].value);
 				//const final = Object.fromEntries(Object.entries(object).filter(([_, v]) => v != ""));
 				//ATL.AddPreset(tempName, final)
+
 				for (const token of <Token[]>canvas.tokens?.controlled) {
 					const actorId = <string>token.actor?.id;
 					const tokenId = token.id;
@@ -457,23 +477,23 @@ export async function customATLDialog(applyChanges: boolean, preset: any = undef
 						token,
 						//lockRotation,
 						sightEnabled,
-						dimSight,
-						brightSight,
+						sightDim,
+						sightBright,
 						sightAngle,
 						sightVisionMode,
 
-						dimLight,
-						brightLight,
+						lightDim,
+						lightBright,
 						lightColor,
 						lightAlpha,
 						lightAngle,
 
-						coloration,
-						luminosity,
-						gradual,
-						saturation,
-						contrast,
-						shadows,
+						lightColoration,
+						lightLuminosity,
+						lightGradual,
+						lightSaturation,
+						lightContrast,
+						lightShadows,
 
 						<string>lightAnimationType,
 						<number>lightAnimationSpeed,
@@ -484,10 +504,10 @@ export async function customATLDialog(applyChanges: boolean, preset: any = undef
 						effectName,
 						"",
 						duration,
-
 						vision,
 						// token.id,
 						// alias,
+
 						height,
 						width,
 						scale,

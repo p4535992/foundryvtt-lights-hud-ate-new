@@ -167,9 +167,13 @@
             <label>Other</label>
             <div class="form-fields">
                     <label>Alpha</label>
-                    <input id="alpha" name="flags.lights-hud-ate.alpha" type="number" value="{{flags.lights-hud-ate.alpha}}"></input>
+                    <input id="alpha" name="alpha" type="number" value="{{alpha}}"></input>
                     <label>Vision Mode</label>
-                    <input id="sight-vision-mode" name="flags.lights-hud-ate.sight-vision-mode" type="text" value="{{flags.lights-hud-ate.sight-vision-mode}}"></input>
+                    <select id="sight-vision-mode" name="flags.lights-hud-ate.sight-vision-mode" is="ms-dropdown-ligthhudate">
+                        {{#each animationTypes as |animationType|}}
+                            <option data-image="{{visionModeType.img}}" {{#isOptionSelected "flags.lights-hud-ate.sight-vision-mode"}} value="{{visionModeType.id}}" {{/isOptionSelected}}>{{localize visionModeType.name}}</option>
+                        {{/each}}
+                    </select>
             </div>
         </div>
         <div class="form-group slim lights-hud-ate-sub-group">
