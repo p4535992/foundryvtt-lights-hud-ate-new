@@ -142,6 +142,7 @@ export default {
 			sightAngle: null,
 			isTemporary: false,
 			duration: -1,
+			sightVisionMode: null,
 		},
 		{
 			id: VisionHUDPreset.NONE,
@@ -152,6 +153,7 @@ export default {
 			sightAngle: 360,
 			isTemporary: false,
 			duration: -1,
+			sightVisionMode: null,
 		},
 		{
 			id: VisionHUDPreset.SELF,
@@ -162,6 +164,7 @@ export default {
 			sightAngle: 360,
 			isTemporary: false,
 			duration: -1,
+			sightVisionMode: null,
 		},
 		{
 			id: VisionHUDPreset.DARKVISION_30,
@@ -172,6 +175,7 @@ export default {
 			sightAngle: 360,
 			isTemporary: false,
 			duration: -1,
+			sightVisionMode: null,
 		},
 		{
 			id: VisionHUDPreset.DARKVISION_60,
@@ -182,6 +186,7 @@ export default {
 			sightAngle: 360,
 			isTemporary: false,
 			duration: -1,
+			sightVisionMode: null,
 		},
 		{
 			id: VisionHUDPreset.DARKVISION_90,
@@ -192,6 +197,7 @@ export default {
 			sightAngle: 360,
 			isTemporary: false,
 			duration: -1,
+			sightVisionMode: null,
 		},
 		{
 			id: VisionHUDPreset.DARKVISION_120,
@@ -202,6 +208,7 @@ export default {
 			sightAngle: 360,
 			isTemporary: false,
 			duration: -1,
+			sightVisionMode: null,
 		},
 		{
 			id: VisionHUDPreset.DARKVISION_150,
@@ -212,6 +219,7 @@ export default {
 			sightAngle: 360,
 			isTemporary: false,
 			duration: -1,
+			sightVisionMode: null,
 		},
 		{
 			id: VisionHUDPreset.DARKVISION_180,
@@ -222,6 +230,7 @@ export default {
 			sightAngle: 360,
 			isTemporary: false,
 			duration: -1,
+			sightVisionMode: null,
 		},
 		{
 			id: VisionHUDPreset.LOW_LIGHT_VISION,
@@ -232,6 +241,7 @@ export default {
 			sightAngle: 360,
 			isTemporary: false,
 			duration: -1,
+			sightVisionMode: null,
 		},
 	],
 };

@@ -11,6 +11,7 @@ import {
 	i18n,
 	i18nFormat,
 	isStringEquals,
+	is_real_number,
 	prepareTokenDataDropTheTorch,
 	retrieveItemLightsWithFlag,
 	retrieveItemLightsWithFlagAndDisableThem,
@@ -140,6 +141,7 @@ export function presetDialog(applyChanges: boolean): Dialog {
 					const height = null;
 					const width = null;
 					const scale = null;
+					const alpha = null;
 					const isPreset = true;
 					const hasVision =
 						visionType != null &&
@@ -165,12 +167,10 @@ export function presetDialog(applyChanges: boolean): Dialog {
 						? lightIndex.img
 						: tokenIcon;
 
-					// TODO
-					const alpha = null;
-					// TODO
-					const sightEnabled = null;
-					// TODO
-					const sightVisionMode = null;
+					const sightEnabled =
+						(is_real_number(dimSight) && Number(dimSight) > 0) ||
+						(is_real_number(brightSight) && Number(brightSight) > 0);
+					const sightVisionMode = visionIndex.sightVisionMode ?? tokenData.sight.visionMode;
 
 					// Update Token
 					await updateTokenLighting(
@@ -235,6 +235,7 @@ export function customATLDialog(applyChanges: boolean, preset: any = undefined, 
 		luminosity,
 		saturation,
 		shadows,
+		visionMode,
 	} = light ? light : 0;
 	switch (copy) {
 		case true: {
@@ -273,6 +274,7 @@ export function customATLDialog(applyChanges: boolean, preset: any = undefined, 
 	if (luminosity === undefined) luminosity = "";
 	if (saturation === undefined) saturation = "";
 	if (shadows === undefined) shadows = "";
+	if (visionMode === undefined) visionMode = "";
 
 	let colorationTypes = ``;
 	for (const [k, v] of Object.entries(AdaptiveLightingShader.COLORATION_TECHNIQUES)) {
@@ -368,7 +370,10 @@ export function customATLDialog(applyChanges: boolean, preset: any = undefined, 
                   <input id="width" name="width" type="number" value="${width}"></input>
                   <label>Scale</label>
                   <input id="scale" name="scale" type="number" value="${scale}"></input>
-
+                  <label>Alpha</label>
+                  <input id="alpha" name="alpha" type="number" value="${alpha}"></input>
+				  <label>Vision Mode</label>
+                  <input id="visionMode" name="visionMode" type="text" value="${visionMode}"></input>
           </div>
       </div>
       <div class="form-group slim lights-hud-ate-sub-group">
@@ -515,14 +520,15 @@ export function customATLDialog(applyChanges: boolean, preset: any = undefined, 
 				const height = <number>checkNumberFromString(html.find("#height")[0].value);
 				const width = <number>checkNumberFromString(html.find("#width")[0].value);
 				const scale = <number>checkNumberFromString(html.find("#scale")[0].value);
-				// TODO
 				const alpha = <number>checkNumberFromString(html.find("#alpha")[0].value);
-				// TODO
-				const sightEnabled = <boolean>checkBooleanFromString(html.find("#enabled")[0].value);
-				// TODO
+
 				const sightVisionMode = <string>html.find("#visionMode")[0].value;
 				const dimSight = <number>checkNumberFromString(html.find("#dimSight")[0].value);
 				const brightSight = <number>checkNumberFromString(html.find("#brightSight")[0].value);
+				const sightEnabled =
+					(is_real_number(dimSight) && Number(dimSight) > 0) ||
+					(is_real_number(brightSight) && Number(brightSight) > 0);
+				// const sightEnabled = <boolean>checkBooleanFromString(html.find("#enabled")[0].value);
 				const sightAngle = <number>checkNumberFromString(html.find("#sightAngle")[0].value);
 
 				const dimLight = <number>checkNumberFromString(html.find("#dim")[0].value);
@@ -1040,7 +1046,9 @@ async function applyFlagsOnTokenLightsStatic(tokenId: string, itemId: string, is
 	const saturation = tokenData.light.saturation;
 	const lightContrast = tokenData.light.contrast;
 	const lightShadows = tokenData.light.shadows;
-	const vision = dimSight > 0 || brightSight > 0 ? true : false;
+	// const vision = dimSight > 0 || brightSight > 0 ? true : false;
+	const vision =
+		(is_real_number(dimSight) && Number(dimSight) > 0) || (is_real_number(brightSight) && Number(brightSight) > 0);
 
 	const duration = lightHUDElement.duration || 0;
 
@@ -1062,12 +1070,10 @@ async function applyFlagsOnTokenLightsStatic(tokenId: string, itemId: string, is
 		}
 	}
 
-	// TODO
-	const alpha = null;
-	// TODO
-	const sightEnabled = null;
-	// TODO
-	const sightVisionMode = null;
+	const alpha = tokenData.alpha ?? 1;
+	const sightEnabled =
+		(is_real_number(dimSight) && Number(dimSight) > 0) || (is_real_number(brightSight) && Number(brightSight) > 0);
+	const sightVisionMode = tokenData.sight.visionMode;
 
 	// Update Token
 	await updateTokenLighting(
@@ -1340,12 +1346,10 @@ async function applyFlagsOnToken(tokenId: string, itemId: string, isApplied: boo
 		}
 	}
 
-	// TODO
-	const alpha = null;
-	// TODO
-	const sightEnabled = null;
-	// TODO
-	const sightVisionMode = null;
+	const alpha = tokenData.alpha ?? 1;
+	const sightEnabled =
+		(is_real_number(dimSight) && Number(dimSight) > 0) || (is_real_number(brightSight) && Number(brightSight) > 0);
+	const sightVisionMode = tokenData.sight.visionMode;
 
 	// Update Token
 	await updateTokenLighting(

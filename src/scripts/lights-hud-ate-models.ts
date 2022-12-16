@@ -43,6 +43,7 @@ export class VisionHUDElement {
 	sightAngle: number | null;
 	isTemporary: boolean;
 	duration: number;
+	sightVisionMode: string | null;
 }
 
 export enum VisionHUDPreset {
@@ -150,14 +151,14 @@ export enum LightHUDNoteFlags {
 	VISION_TYPE = "vision-type",
 	LIGHT_SOURCE = "light-source",
 
-	LIGHT_DIM_BASIC = "dim-basic",
-	LIGHT_BRIGHT_BASIC = "bright-basic",
-	LIGHT_ANGLE_BASIC = "angle-basic",
-	LIGHT_COLOR_BASIC = "color-basic",
-	LIGHT_ALPHA_BASIC = "alpha-basic",
+	LIGHT_DIM_BASIC = "light-dim-basic",
+	LIGHT_BRIGHT_BASIC = "light-bright-basic",
+	LIGHT_ANGLE_BASIC = "light-angle-basic",
+	LIGHT_COLOR_BASIC = "light-color-basic",
+	LIGHT_ALPHA_BASIC = "light-alpha-basic",
 
-	SIGHT_DIM_BASIC = "dim-sight-basic",
-	SIGHT_BRIGHT_BASIC = "bright-sight-basic",
+	SIGHT_DIM_BASIC = "sight-dim-basic",
+	SIGHT_BRIGHT_BASIC = "sight-bright-basic",
 	SIGHT_ANGLE_BASIC = "sight-angle-basic",
 
 	// ADVANCED SETTINGS
@@ -167,14 +168,16 @@ export enum LightHUDNoteFlags {
 	HEIGHT = "height",
 	WIDTH = "width",
 	SCALE = "scale",
-	SIGHT_DIM = "dim-sight",
-	SIGHT_BRIGHT = "bright-sight",
+	ALPHA = "alpha",
+	SIGHT_DIM = "sight-dim",
+	SIGHT_BRIGHT = "sight-bright",
 	SIGHT_ANGLE = "sight-angle",
-	LIGHT_DIM = "dim",
-	LIGHT_BRIGHT = "bright",
-	LIGHT_ANGLE = "angle",
-	LIGHT_COLOR = "color",
-	LIGHT_ALPHA = "alpha",
+	SIGHT_VISION_MODE = "sight-vision-mode",
+	LIGHT_DIM = "light-dim",
+	LIGHT_BRIGHT = "light-bright",
+	LIGHT_ANGLE = "light-angle",
+	LIGHT_COLOR = "light-color",
+	LIGHT_ALPHA = "light-alpha",
 	ANIMATION_TYPE = "animation-type",
 	ANIMATION_SPEED = "animation-speed",
 	ANIMATION_REVERSE = "animation-reverse",

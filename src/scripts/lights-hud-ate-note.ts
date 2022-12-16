@@ -1,4 +1,4 @@
-import { checkNumberFromString, error, i18n } from "./lib/lib";
+import { checkNumberFromString, error, i18n, is_real_number } from "./lib/lib";
 import CONSTANTS from "./constants";
 import { LightHUDNoteFlags, OptionSelectData } from "./lights-hud-ate-models";
 import API from "./api";
@@ -523,6 +523,13 @@ export class LightHUDAteNote extends FormApplication {
 					await this.entity.setFlag(CONSTANTS.MODULE_NAME, LightHUDNoteFlags.SCALE, null);
 				}
 
+				const alpha = formData[`flags.${CONSTANTS.MODULE_NAME}.${LightHUDNoteFlags.ALPHA}`];
+				if (alpha != null && alpha != undefined && alpha) {
+					await this.entity.setFlag(CONSTANTS.MODULE_NAME, LightHUDNoteFlags.ALPHA, alpha);
+				} else {
+					await this.entity.setFlag(CONSTANTS.MODULE_NAME, LightHUDNoteFlags.ALPHA, null);
+				}
+
 				const sightAngle = formData[`flags.${CONSTANTS.MODULE_NAME}.${LightHUDNoteFlags.SIGHT_ANGLE}`];
 				if (sightAngle != null && sightAngle != undefined && sightAngle) {
 					await this.entity.setFlag(CONSTANTS.MODULE_NAME, LightHUDNoteFlags.SIGHT_ANGLE, sightAngle);
@@ -549,6 +556,13 @@ export class LightHUDAteNote extends FormApplication {
 					await this.entity.setFlag(CONSTANTS.MODULE_NAME, LightHUDNoteFlags.WIDTH, width);
 				} else {
 					await this.entity.setFlag(CONSTANTS.MODULE_NAME, LightHUDNoteFlags.WIDTH, null);
+				}
+
+				const visionMode = formData[`flags.${CONSTANTS.MODULE_NAME}.${LightHUDNoteFlags.SIGHT_VISION_MODE}`];
+				if (visionMode != null && visionMode != undefined && visionMode) {
+					await this.entity.setFlag(CONSTANTS.MODULE_NAME, LightHUDNoteFlags.SIGHT_VISION_MODE, visionMode);
+				} else {
+					await this.entity.setFlag(CONSTANTS.MODULE_NAME, LightHUDNoteFlags.SIGHT_VISION_MODE, null);
 				}
 			}
 
@@ -592,6 +606,9 @@ export class LightHUDAteNote extends FormApplication {
 				);
 				const scale = <number>(
 					checkNumberFromString(this.entity.getFlag(CONSTANTS.MODULE_NAME, LightHUDNoteFlags.SCALE))
+				);
+				const alpha = <number>(
+					checkNumberFromString(this.entity.getFlag(CONSTANTS.MODULE_NAME, LightHUDNoteFlags.ALPHA))
 				);
 
 				let brightSight: number | null = null;
@@ -768,12 +785,10 @@ export class LightHUDAteNote extends FormApplication {
 						checkNumberFromString(this.entity.getFlag(CONSTANTS.MODULE_NAME, LightHUDNoteFlags.DURATION))
 					) || 0;
 
-				// TODO
-				const alpha = null;
-				// TODO
-				const sightEnabled = true;
-				// TODO
-				const sightVisionMode = "";
+				const sightEnabled =
+					(is_real_number(dimSight) && Number(dimSight) > 0) ||
+					(is_real_number(brightSight) && Number(brightSight) > 0);
+				const sightVisionMode = this.entity.getFlag(CONSTANTS.MODULE_NAME, LightHUDNoteFlags.SIGHT_VISION_MODE);
 
 				const efffectAtlToApply = await aemlApiLigthsHudAte.convertToATLEffect(
 					//lockRotation,

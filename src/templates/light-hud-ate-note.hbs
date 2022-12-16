@@ -108,7 +108,7 @@
             <div class="form-group">
                 <label>Light Color Basic</label>
                 <div class="form-fields">
-                    <input type="color" id="color-basic" name="flags.lights-hud-ate.color-basic" value="{{flags.lights-hud-ate.color-basic}}">
+                    <input type="color" id="light-color-basic" name="flags.lights-hud-ate.light-color-basic" value="{{flags.lights-hud-ate.light-color-basic}}">
                 </div>
             </div>
         </div>
@@ -116,7 +116,7 @@
             <div class="form-group">
                 <label>Color Intensity Basic</label>
                 <div class="form-fields">
-                    <input id="alpha-basic" name="flags.lights-hud-ate.alpha-basic" type="number" min="0" max="1" placeholder="0-1" value="{{flags.lights-hud-ate.alpha-basic}}"></input>
+                    <input id="light-alpha-basic" name="flags.lights-hud-ate.light-alpha-basic" type="number" min="0" max="1" placeholder="0-1" value="{{flags.lights-hud-ate.light-alpha-basic}}"></input>
                 </div>
             </div>
         </div>
@@ -161,6 +161,8 @@
                     <input id="width" name="flags.lights-hud-ate.width" type="number" value="{{flags.lights-hud-ate.width}}"></input>
                     <label>Scale</label>
                     <input id="scale" name="flags.lights-hud-ate.scale" type="number" value="{{flags.lights-hud-ate.scale}}"></input>
+                    <label>Alpha</label>
+                    <input id="alpha" name="flags.lights-hud-ate.alpha" type="number" value="{{flags.lights-hud-ate.alpha}}"></input>
 
             </div>
         </div>
@@ -168,9 +170,9 @@
             <label>Vision</label>
             <div class="form-fields">
                     <label>Dim</label>
-                    <input id="dimSight" name="flags.lights-hud-ate.dim-sight" type="number" value="{{flags.lights-hud-ate.dim-sight}}"></input>
+                    <input id="dimSight" name="flags.lights-hud-ate.sight-dim" type="number" value="{{flags.lights-hud-ate.sight-dim}}"></input>
                     <label>Bright</label>
-                    <input id="brightSight" name="flags.lights-hud-ate.bright-sight" type="number" value="{{flags.lights-hud-ate.bright-sight}}"></input>
+                    <input id="brightSight" name="flags.lights-hud-ate.sight-bright" type="number" value="{{flags.lights-hud-ate.sight-bright}}"></input>
             </div>
         </div>
         <div class="form-group slim lights-hud-ate-sub-group">
@@ -184,36 +186,36 @@
             <label>Light Radius</label>
             <div class="form-fields ">
                     <label>Dim</label>
-                    <input id="dim" name="flags.lights-hud-ate.dim" type="number" value="{{dim}}"></input>
+                    <input id="dim" name="flags.lights-hud-ate.light-dim" type="number" value="{{dim}}"></input>
                     <label>Bright</label>
-                    <input id="bright" name="flags.lights-hud-ate.bright" type="number" value="{{bright}}"></input>
+                    <input id="bright" name="flags.lights-hud-ate.light-bright" type="number" value="{{bright}}"></input>
             </div>
         </div>
         <div class="form-group slim lights-hud-ate-sub-group">
             <label>Emission Angle</label>
             <div class="form-fields">
-                <input id="angle" name="flags.lights-hud-ate.angle" type="number" min="0" max="360" step="1" value="{{flags.lights-hud-ate.angle}}"></input>
+                <input id="angle" name="flags.lights-hud-ate.light-angle" type="number" min="0" max="360" step="1" value="{{flags.lights-hud-ate.light-angle}}"></input>
             </div>
         </div>
         <div class="form-group slim lights-hud-ate-sub-group">
             <label>Light Color</label>
             <div class="form-fields">
-                <input type="color" id="color" name="flags.lights-hud-ate.color" value="{{flags.lights-hud-ate.color}}">
+                <input type="color" id="color" name="flags.lights-hud-ate.light-color" value="{{flags.lights-hud-ate.light-color}}">
             </div>
         </div>
         <div class="form-group slim lights-hud-ate-sub-group">
             <label>Color Intensity</label>
             <div class="form-fields">
-                <input id="alpha" name="flags.lights-hud-ate.alpha" type="number" min="0" max="1" placeholder="0-1" value="{{flags.lights-hud-ate.alpha}}"></input>
+                <input id="alpha" name="flags.lights-hud-ate.light-alpha" type="number" min="0" max="1" placeholder="0-1" value="{{flags.lights-hud-ate.light-alpha}}"></input>
             </div>
         </div>
         <h3>Animation</h3>
         <div class="form-group lights-hud-ate-sub-group">
             <label>Animation Type</label>
             <div class="form-fields">
-                <select id="animationType" name="flags.lights-hud-ate.animation-type" is="ms-dropdown-ligthhudate">
+                <select id="animationType" name="flags.lights-hud-ate.light-animation-type" is="ms-dropdown-ligthhudate">
                     {{#each animationTypes as |animationType|}}
-                        <option data-image="{{animationType.img}}" {{#isOptionSelected "flags.lights-hud-ate.animation-type"}} value="{{animationType.id}}" {{/isOptionSelected}}>{{localize animationType.name}}</option>
+                        <option data-image="{{animationType.img}}" {{#isOptionSelected "flags.lights-hud-ate.light-animation-type"}} value="{{animationType.id}}" {{/isOptionSelected}}>{{localize animationType.name}}</option>
                     {{/each}}
                 </select>
             </div>
@@ -221,23 +223,23 @@
         <div class="form-group lights-hud-ate-sub-group">
             <label>Animation Speed</label>
             <div class="form-fields">
-                <input id="animationSpeed" name="flags.lights-hud-ate.animation-speed" type="range" min="1" max="10" step="1"
-                value="{{flags.lights-hud-ate.animation-speed}}"></input>
+                <input id="animationSpeed" name="flags.lights-hud-ate.light-animation-speed" type="range" min="1" max="10" step="1"
+                value="{{flags.lights-hud-ate.light-animation-speed}}"></input>
             </div>
         </div>
         <div class="form-group lights-hud-ate-sub-group">
             <label>Reverse Direction</label>
             <div class="form-fields">
-                <input type="checkbox" id="animationReverse" name="flags.lights-hud-ate.animation-reverse"
-                value="{{flags.lights-hud-ate.animation-reverse}}"
-                {{checkedIf flags.lights-hud-ate.animation-reverse}}/>
+                <input type="checkbox" id="animationReverse" name="flags.lights-hud-ate.light-animation-reverse"
+                value="{{flags.lights-hud-ate.light-animation-reverse}}"
+                {{checkedIf flags.lights-hud-ate.light-animation-reverse}}/>
             </div>
         </div>
         <div class="form-group lights-hud-ate-sub-group">
             <label>Animation Intensity</label>
             <div class="form-fields">
-                <input id="animationIntensity" name="flags.lights-hud-ate.animation-intensity" type="range" min="1" max="10" step="1"
-                value="{{flags.lights-hud-ate.animation-intensity}}"></input>
+                <input id="animationIntensity" name="flags.lights-hud-ate.light-animation-intensity" type="range" min="1" max="10" step="1"
+                value="{{flags.lights-hud-ate.light-animation-intensity}}"></input>
             </div>
         </div>
         <h3>Advanced Animation</h3>
