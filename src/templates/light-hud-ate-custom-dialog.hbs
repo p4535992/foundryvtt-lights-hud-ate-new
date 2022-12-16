@@ -1,0 +1,159 @@
+<form>
+    <div class="form-group">
+        <label>Effect Name</label>
+        <div class="form-fields">
+        <input id="name" name="{{id}}" type="text" value="{{name}}"></input>
+        </div>
+    </div>
+    <div class="form-group">
+    <label>Apply as ATE/ATL Effect:</label>
+    <div class="form-fields">
+        <input id="apply-as-atl-ate" name="apply-as-atl-ate" type="checkbox" value="false" onclick="$(this).attr('value', this.checked ? true : false)"/>
+    </div>
+    </div>
+    <div class="form-group">
+    <label>Duration in Minutes:</label>
+    <input id="duration" name="duration" type="number" min="0">
+    </div>
+    <h3>Token Data</h3>
+    <div class="form-group slim lights-hud-ate-sub-group">
+        <label>Size</label>
+        <div class="form-fields">
+                <label>Height</label>
+                <input id="height" name="height" type="number" value="{{height}}"></input>
+                <label>Width</label>
+                <input id="width" name="width" type="number" value="{{width}}"></input>
+                <label>Scale</label>
+                <input id="scale" name="scale" type="number" value="{{scale}}"></input>
+        </div>
+    </div>
+    <div class="form-group slim lights-hud-ate-sub-group">
+        <label>Other</label>
+        <div class="form-fields">
+                <label>Alpha</label>
+                <input id="alpha" name="alpha" type="number" value="{{alpha}}"></input>
+                <label>Vision Mode</label>
+                <input id="visionMode" name="visionMode" type="text" value="{{visionMode}}"></input>
+        </div>
+    </div>
+    <div class="form-group slim lights-hud-ate-sub-group">
+        <label>Vision</label>
+        <div class="form-fields">
+                <label>Dim</label>
+                <input id="dimSight" name="dimSight" type="number" value="{{dimSight}}"></input>
+                <label>Bright</label>
+                <input id="brightSight" name="brightSight" type="number" value="{{brightSight}}"></input>
+        </div>
+    </div>
+    <div class="form-group slim lights-hud-ate-sub-group">
+    <label>Vision Angle</label>
+        <div class="form-fields">
+            <input id="sightAngle" name="sightAngle" type="number" min="0" max="360" step="1" value="{{sightAngle}}"></input>
+        </div>
+    </div>
+    <h3>Lighting</h3>
+    <div class="form-group slim lights-hud-ate-sub-group">
+        <label>Light Radius</label>
+        <div class="form-fields ">
+                <label>Dim</label>
+                <input id="dim" name="dim" type="number" value="{{dim}}"></input>
+                <label>Bright</label>
+                <input id="bright" name="bright" type="number" value="{{bright}}"></input>
+        </div>
+    </div>
+    <div class="form-group slim lights-hud-ate-sub-group">
+        <label>Emission Angle</label>
+        <div class="form-fields">
+            <input id="lightAngle" name="lightAngle" type="number" min="0" max="360" step="1" value="{{lightAngle}}"></input>
+        </div>
+    </div>
+    <div class="form-group slim lights-hud-ate-sub-group">
+        <label>Light Color</label>
+        <div class="form-fields">
+        <input id="color" name="color" type="color" value="{{color}}">
+        </div>
+    </div>
+    <div class="form-group slim lights-hud-ate-sub-group">
+    <label>Color Intensity</label>
+        <div class="form-fields">
+            <input id="lightAlpha" name="alpha" type="number" min="0" max="1" placeholder="0-1" value="{{lightAlpha}}"></input>
+        </div>
+    </div>
+    <h3>Animation</h3>
+    <div class="form-group lights-hud-ate-sub-group">
+        <label>Animation Type</label>
+        <div class="form-fields">
+            <select id="animationType" name="animationType" >{{animationTypes}}</select>
+        </div>
+    </div>
+    <div class="form-group lights-hud-ate-sub-group">
+        <label>Animation Speed</label>
+        <div class="form-fields">
+            <input id="animationSpeed" name="animationSpeed" type="range" min="1" max="10" step="1"
+            value="{{animationSpeed}}"></input>
+        </div>
+    </div>
+    <div class="form-group lights-hud-ate-sub-group">
+        <label>Reverse Direction</label>
+        <div class="form-fields">
+            <input id="animationReverse" name="animationReverse" type="checkbox" 
+            {{checkedIf animationReverse}}
+            onclick="$(this).attr('value', this.checked ? true : false)">
+        </div>
+    </div>
+    <div class="form-group lights-hud-ate-sub-group">
+        <label>Animation Intensity</label>
+        <div class="form-fields">
+            <input id="animationIntensity" name="animationIntensity" type="range" min="1" max="10" step="1"
+            value="{{animationIntensity}}"></input>
+        </div>
+    </div>
+    <h3>Advanced Animation</h3>
+    <div class="form-group lights-hud-ate-sub-group">
+        <label>Coloration Technique</label>
+        <div class="form-fields">
+            <select id="lightColoration" name="lightColoration" data-dtype="Number">
+            {{colorationTypes}}
+            </select>
+        </div>
+    </div>
+
+    <div class="form-group lights-hud-ate-sub-group">
+        <label>Luminosity</label>
+        <div class="form-fields">
+            <input id="lightLuminosity" name="lightLuminosity" type="range" 
+            value="{{luminosity}}" min="-1" max="1" step="0.05">
+            <span class="range-value">0.5</span>
+        </div>
+    </div>
+
+    <div class="form-group lights-hud-ate-sub-group">
+        <label>Gradual Illumination</label>
+        <div class="form-fields">
+            <input id="lightGradual" name="lightGradual" type="checkbox" 
+            {{checkedIf gradual}}
+            onclick="$(this).attr('value', this.checked ? true : false)">
+        </div>
+    </div>
+
+    <div class="form-group lights-hud-ate-sub-group">
+        <label>Background Saturation</label>
+        <div class="form-fields">
+            <input id="lightSaturation" name="lightSaturation" type="range" value="{{saturation}}" min="-1" max="1" step="0.05">
+        </div>
+    </div>
+
+    <div class="form-group lights-hud-ate-sub-group">
+        <label>Background Contrast</label>
+        <div class="form-fields">
+            <input id="lightContrast" name="lightContrast" type="range" value="{{contrast}}" min="-1" max="1" step="0.05">
+        </div>
+    </div>
+
+    <div class="form-group lights-hud-ate-sub-group">
+        <label>Background Shadows</label>
+        <div class="form-fields">
+            <input id="lightShadows" name="lightShadows" type="range"  value="{{shadows}}" min="0" max="1" step="0.05">
+        </div>
+    </div>
+</form>

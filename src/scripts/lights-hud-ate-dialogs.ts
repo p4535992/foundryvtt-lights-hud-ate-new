@@ -220,7 +220,7 @@ export function presetDialog(applyChanges: boolean): Dialog {
 	});
 }
 
-export function customATLDialog(applyChanges: boolean, preset: any = undefined, copy = false): Dialog {
+export async function customATLDialog(applyChanges: boolean, preset: any = undefined, copy = false): Promise<Dialog> {
 	let { light, dimSight, brightSight, sightAngle, name, height, width, scale, id } = preset ? preset : 0;
 	let {
 		dim,
@@ -228,7 +228,7 @@ export function customATLDialog(applyChanges: boolean, preset: any = undefined, 
 		color,
 		animation,
 		alpha,
-		angle,
+		lightAngle,
 		coloration,
 		contrast,
 		gradual,
@@ -236,6 +236,7 @@ export function customATLDialog(applyChanges: boolean, preset: any = undefined, 
 		saturation,
 		shadows,
 		visionMode,
+		lightAlpha,
 	} = light ? light : 0;
 	switch (copy) {
 		case true: {
@@ -259,14 +260,15 @@ export function customATLDialog(applyChanges: boolean, preset: any = undefined, 
 	if (height === undefined) height = "";
 	if (width === undefined) width = "";
 	if (scale === undefined) scale = "";
+	if (alpha === undefined) alpha = "";
 	if (dim === undefined) dim = "";
 	if (bright === undefined) bright = "";
 	if (dimSight === undefined) dimSight = "";
 	if (brightSight === undefined) brightSight = "";
 	if (sightAngle === undefined) sightAngle = "";
 	if (color === undefined) color = "";
-	if (angle === undefined) angle = "";
-	if (alpha === undefined) alpha = "";
+	if (lightAngle === undefined) lightAngle = "";
+	if (lightAlpha === undefined) lightAlpha = "";
 	if (animation === undefined) animation = {};
 	if (coloration === undefined) coloration = "";
 	if (contrast === undefined) contrast = "";
@@ -342,160 +344,38 @@ export function customATLDialog(applyChanges: boolean, preset: any = undefined, 
 
 	// TODO ma l'id di sotto deve essere sostituito con il name ????
 
-	const dialogContent = `
-  <form>
-      <div class="form-group">
-          <label>Effect Name</label>
-          <div class="form-fields">
-            <input id="name" name="${id}" type="text" value="${name}"></input>
-          </div>
-      </div>
-      <div class="form-group">
-        <label>Apply as ATE/ATL Effect:</label>
-        <div class="form-fields">
-          <input type="checkbox" id="apply-as-atl-ate" name="apply-as-atl-ate" value="false" onclick="$(this).attr('value', this.checked ? true : false)"/>
-        </div>
-      </div>
-      <div class="form-group">
-        <label>Duration in Minutes:</label>
-        <input type="number" id="duration" name="duration" min="0">
-      </div>
-      <h3>Token Data</h3>
-      <div class="form-group slim lights-hud-ate-sub-group">
-          <label>Size</label>
-          <div class="form-fields">
-                  <label>Height</label>
-                  <input id="height" name="height" type="number" value="${height}"></input>
-                  <label>Width</label>
-                  <input id="width" name="width" type="number" value="${width}"></input>
-                  <label>Scale</label>
-                  <input id="scale" name="scale" type="number" value="${scale}"></input>
-                  <label>Alpha</label>
-                  <input id="alpha" name="alpha" type="number" value="${alpha}"></input>
-				  <label>Vision Mode</label>
-                  <input id="visionMode" name="visionMode" type="text" value="${visionMode}"></input>
-          </div>
-      </div>
-      <div class="form-group slim lights-hud-ate-sub-group">
-          <label>Vision</label>
-          <div class="form-fields">
-                  <label>Dim</label>
-                  <input id="dimSight" name="dimSight" type="number" value="${dimSight}"></input>
-                  <label>Bright</label>
-                  <input id="brightSight" name="brightSight" type="number" value="${brightSight}"></input>
-          </div>
-      </div>
-      <div class="form-group slim lights-hud-ate-sub-group">
-      <label>Vision Angle</label>
-          <div class="form-fields">
-              <input id="sightAngle" name="sightAngle" type="number" min="0" max="360" step="1" value="${sightAngle}"></input>
-          </div>
-      </div>
-      <h3>Lighting</h3>
-      <div class="form-group slim lights-hud-ate-sub-group">
-          <label>Light Radius</label>
-          <div class="form-fields ">
-                  <label>Dim</label>
-                  <input id="dim" name="dim" type="number" value="${dim}"></input>
-                  <label>Bright</label>
-                  <input id="bright" name="bright" type="number" value="${bright}"></input>
-          </div>
-      </div>
-      <div class="form-group slim lights-hud-ate-sub-group">
-          <label>Emission Angle</label>
-          <div class="form-fields">
-              <input id="angle" name="angle" type="number" min="0" max="360" step="1" value="${angle}"></input>
-          </div>
-      </div>
-      <div class="form-group slim lights-hud-ate-sub-group">
-          <label>Light Color</label>
-          <div class="form-fields">
-            <input type="color" id="color" name="color" value="${color}">
-          </div>
-      </div>
-      <div class="form-group slim lights-hud-ate-sub-group">
-      <label>Color Intensity</label>
-          <div class="form-fields">
-              <input id="alpha" name="alpha" type="number" min="0" max="1" placeholder="0-1" value="${alpha}"></input>
-          </div>
-      </div>
-      <h3>Animation</h3>
-      <div class="form-group lights-hud-ate-sub-group">
-          <label>Animation Type</label>
-          <div class="form-fields">
-              <select id="animationType" name="animationType" >${animationTypes}</select>
-          </div>
-      </div>
-      <div class="form-group lights-hud-ate-sub-group">
-          <label>Animation Speed</label>
-          <div class="form-fields">
-              <input id="animationSpeed" name="animationSpeed" type="range" min="1" max="10" step="1"
-              value="${animation?.speed}"></input>
-          </div>
-      </div>
-      <div class="form-group lights-hud-ate-sub-group">
-          <label>Reverse Direction</label>
-          <div class="form-fields">
-              <input type="checkbox" id="animationReverse" name="animationReverse"
-              ${animation?.reverse ? "checked" : ""}
-              onclick="$(this).attr('value', this.checked ? true : false)">
-          </div>
-      </div>
-      <div class="form-group lights-hud-ate-sub-group">
-          <label>Animation Intensity</label>
-          <div class="form-fields">
-              <input id="animationIntensity" name="animationIntensity" type="range" min="1" max="10" step="1"
-              value="${animation?.intensity}"></input>
-          </div>
-      </div>
-      <h3>Advanced Animation</h3>
-      <div class="form-group lights-hud-ate-sub-group">
-          <label>Coloration Technique</label>
-          <div class="form-fields">
-              <select id="lightColoration" name="lightColoration" data-dtype="Number">
-              ${colorationTypes}
-              </select>
-          </div>
-      </div>
-
-      <div class="form-group lights-hud-ate-sub-group">
-          <label>Luminosity</label>
-          <div class="form-fields">
-              <input type="range" id="lightLuminosity" name="lightLuminosity" value="${luminosity}" min="-1" max="1" step="0.05">
-              <span class="range-value">0.5</span>
-          </div>
-      </div>
-
-      <div class="form-group lights-hud-ate-sub-group">
-          <label>Gradual Illumination</label>
-          <div class="form-fields">
-              <input type="checkbox" id="lightGradual" name="lightGradual"
-              ${gradual ? "checked" : ""}
-              onclick="$(this).attr('value', this.checked ? true : false)">
-          </div>
-      </div>
-
-      <div class="form-group lights-hud-ate-sub-group">
-          <label>Background Saturation</label>
-          <div class="form-fields">
-              <input type="range" id="lightSaturation" name="lightSaturation" value="${saturation}" min="-1" max="1" step="0.05">
-          </div>
-      </div>
-
-      <div class="form-group lights-hud-ate-sub-group">
-          <label>Background Contrast</label>
-          <div class="form-fields">
-              <input type="range" id="lightContrast" name="lightContrast" value="${contrast}" min="-1" max="1" step="0.05">
-          </div>
-      </div>
-
-      <div class="form-group lights-hud-ate-sub-group">
-          <label>Background Shadows</label>
-          <div class="form-fields">
-              <input type="range" id="lightShadows" name="lightShadows" value="${shadows}" min="0" max="1" step="0.05">
-          </div>
-      </div>
-  `;
+	const dialogContent = await renderTemplate(
+		`/modules/${CONSTANTS.MODULE_NAME}/templates/light-hud-ate-custom-dialog.hbs`,
+		{
+			light,
+			dimSight,
+			brightSight,
+			sightAngle,
+			name,
+			height,
+			width,
+			scale,
+			id,
+			preset,
+			dim,
+			bright,
+			color,
+			animation,
+			animationSpeed: animation?.speed,
+			animationReverse: animation?.reverse,
+			animationIntensity: animation?.intensity,
+			alpha,
+			lightAngle,
+			coloration,
+			contrast,
+			gradual,
+			luminosity,
+			saturation,
+			shadows,
+			visionMode,
+			lightAlpha,
+		}
+	);
 
 	return new Dialog({
 		title: `Token Vision Configuration (Custom)`,
@@ -534,8 +414,8 @@ export function customATLDialog(applyChanges: boolean, preset: any = undefined, 
 				const dimLight = <number>checkNumberFromString(html.find("#dim")[0].value);
 				const brightLight = <number>checkNumberFromString(html.find("#bright")[0].value);
 				const lightColor = <string>html.find("#color")[0].value;
-				const lightAlpha = <number>checkNumberFromString(html.find("#alpha")[0].value);
-				const lightAngle = <number>checkNumberFromString(html.find("#angle")[0].value);
+				const lightAlpha = <number>checkNumberFromString(html.find("#lightAlpha")[0].value);
+				const lightAngle = <number>checkNumberFromString(html.find("#lightAngle")[0].value);
 				const lightAnimationType = <string>html.find("#animationType")[0].value;
 				const lightAnimationSpeed = <number>checkNumberFromString(html.find("#animationSpeed")[0].value);
 				const lightAnimationIntensity = <number>(

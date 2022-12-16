@@ -299,7 +299,7 @@ export async function addLightsHUDButtons(app, html: JQuery<HTMLElement>, tokenD
 		// This script is taken from Sky's foundry repo here: https://github.com/Sky-Captain-13/foundry/blob/master/scriptMacros/tokenVision.js.
 		const applyChanges = false;
 		//customDialog(applyChanges).render(true);
-		customATLDialog(applyChanges).render(true);
+		(await customATLDialog(applyChanges)).render(true);
 	});
 	// }
 }
